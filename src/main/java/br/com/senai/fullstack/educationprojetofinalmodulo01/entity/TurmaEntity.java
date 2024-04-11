@@ -19,12 +19,12 @@ public class TurmaEntity implements Serializable {
   private String nome;
 
   @ManyToOne
-  @JoinColumn(name = "docente_id", nullable = false)
+  @JoinColumn(name = "id_professor", nullable = false)
   private DocenteEntity professor;
 
   @ManyToOne(optional = false)
-  @JoinColumn(name = "curso_id", nullable = false)
-  private CursoEntity id_curso;
+  @JoinColumn(name = "id_curso", nullable = false)
+  private CursoEntity curso;
 
   @OneToMany(mappedBy = "turma")
   private List<AlunoEntity> alunos;

@@ -19,11 +19,11 @@ public class DocenteEntity implements Serializable {
   private String nome;
 
   @Column(nullable = false)
-  private Date data_entrada;
+  private Date dataEntrada;
 
   @OneToOne(optional = false)
-  @JoinColumn(name = "usuario_id", nullable = false, unique = true)
-  private UsuarioEntity id_usuario;
+  @JoinColumn(name = "id_usuario", nullable = false, unique = true)
+  private UsuarioEntity usuario;
 
 
 }
