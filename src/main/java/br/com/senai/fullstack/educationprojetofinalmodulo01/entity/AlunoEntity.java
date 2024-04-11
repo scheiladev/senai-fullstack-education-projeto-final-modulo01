@@ -19,13 +19,13 @@ public class AlunoEntity implements Serializable {
   private String nome;
 
   @Column(nullable = false)
-  private Date data_nascimento;
+  private Date dataNascimento;
 
   @OneToOne(optional = false)
-  @JoinColumn(name = "usuario_id", nullable = false, unique = true)
-  private UsuarioEntity id_usuario;
+  @JoinColumn(name = "id_usuario", nullable = false, unique = true)
+  private UsuarioEntity usuario;
 
   @ManyToOne(optional = false)
-  @JoinColumn(name = "turma_id", nullable = false)
-  private TurmaEntity id_turma;
+  @JoinColumn(name = "id_turma", nullable = false)
+  private TurmaEntity turma;
 }

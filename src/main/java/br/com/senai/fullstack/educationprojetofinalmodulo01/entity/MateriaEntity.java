@@ -18,7 +18,7 @@ public class MateriaEntity implements Serializable {
   private String nome;
 
   @ManyToOne(optional = false)
-  @JoinColumn(name = "curso_id", nullable = false)
-  private CursoEntity id_curso;
+  @JoinColumn(name = "id_curso", nullable = false)
+  private CursoEntity curso;
 
 }

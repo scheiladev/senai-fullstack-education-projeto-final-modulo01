@@ -21,6 +21,6 @@ public class UsuarioEntity implements Serializable {
   private String senha;
 
   @ManyToOne(optional = false)
-  @JoinColumn(name = "papel_id", nullable = false)
-  private PapelEntity id_papel;
+  @JoinColumn(name = "id_papel", nullable = false)
+  private PapelEntity papel;
 }

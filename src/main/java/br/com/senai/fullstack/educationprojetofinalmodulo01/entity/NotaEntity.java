@@ -8,7 +8,7 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "notas")
+@Table(name = "nota")
 public class NotaEntity implements Serializable {
 
   @Id
@@ -16,16 +16,16 @@ public class NotaEntity implements Serializable {
   private Long id;
 
   @ManyToOne(optional = false)
-  @JoinColumn(name = "aluno_id", nullable = false)
-  private AlunoEntity id_aluno;
+  @JoinColumn(name = "id_aluno", nullable = false)
+  private AlunoEntity aluno;
 
   @ManyToOne(optional = false)
-  @JoinColumn(name = "docente_id", nullable = false)
-  private DocenteEntity id_professor;
+  @JoinColumn(name = "id_professor", nullable = false)
+  private DocenteEntity professor;
 
   @ManyToOne(optional = false)
-  @JoinColumn(name = "materia_id", nullable = false)
-  private MateriaEntity id_materia;
+  @JoinColumn(name = "id_materia", nullable = false)
+  private MateriaEntity materia;
 
   @Column(nullable = false)
   private Double valor;
