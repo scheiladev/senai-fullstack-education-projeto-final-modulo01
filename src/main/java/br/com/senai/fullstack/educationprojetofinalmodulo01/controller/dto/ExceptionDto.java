@@ -1,11 +1,11 @@
-package br.com.senai.fullstack.educationprojetofinalmodulo01.infra.exception.dto;
+package br.com.senai.fullstack.educationprojetofinalmodulo01.controller.dto;
 
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
-public class ErroDto {
+public class ExceptionDto {
   private String codigo;
   private String mensagem;
 }
