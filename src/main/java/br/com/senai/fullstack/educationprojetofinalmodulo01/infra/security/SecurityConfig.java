@@ -39,9 +39,10 @@ public class SecurityConfig {
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
     http
       .authorizeHttpRequests(auth -> auth
-        .requestMatchers(HttpMethod.GET, "/hello").permitAll()
+        .requestMatchers(HttpMethod.POST, "/login").permitAll()
         .anyRequest().authenticated()
       )
       .csrf(AbstractHttpConfigurer::disable)
@@ -64,7 +65,7 @@ public class SecurityConfig {
       .privateKey(this.priv)
       .build();
 
-    JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(
+    JWKSource<SecurityContext> jwks = new ImmutableJWKSet<> (
       new JWKSet(jwk)
     );
 
