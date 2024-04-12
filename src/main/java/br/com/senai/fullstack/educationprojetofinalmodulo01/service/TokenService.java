@@ -32,17 +32,18 @@ public class TokenService {
 
   public LoginResponse gerarToken(@RequestBody LoginRequest loginRequest) {
 
-    if (loginRequest.login() == null || loginRequest.senha() == null) {
-      throw new RequisicaoInvalidaException("Erro, login e senha são obrigatórios");
+    if (loginRequest.login() == null ||
+        loginRequest.senha() == null) {
+      throw new RequisicaoInvalidaException("Erro: todos os campos são obrigatórios.");
     }
 
     UsuarioEntity usuarioEntity = usuarioRepository
       .findByLogin(loginRequest.login())
-      .orElseThrow(() -> new NotFoundException("Erro, usuário não existe")
+      .orElseThrow(() -> new NotFoundException("Erro: usuário não existe.")
       );
 
-    if (!usuarioEntity.senhaValida(loginRequest, bCryptEncoder)) {
-      throw new RequisicaoInvalidaException("Erro, senha incorreta");
+    if (!usuarioEntity.validarSenha(loginRequest, bCryptEncoder)) {
+      throw new RequisicaoInvalidaException("Erro: senha incorreta.");
     }
 
     Instant now = Instant.now();
@@ -50,7 +51,7 @@ public class TokenService {
     String scope = usuarioEntity.getPapel().getNome();
 
     JwtClaimsSet claims = JwtClaimsSet.builder()
-      .issuer("projeto1")
+      .issuer("labPCP")
       .issuedAt(now)
       .expiresAt(now.plusSeconds(TEMPO_EXPIRACAO))
       .subject(usuarioEntity.getId().toString())
@@ -64,7 +65,7 @@ public class TokenService {
     return new LoginResponse(tokenJWT, TEMPO_EXPIRACAO);
   }
 
-  public String buscaCampo(String token, String claim) {
+  public String buscarCampo(String token, String claim) {
     return jwtDecoder
       .decode(token)
       .getClaims()

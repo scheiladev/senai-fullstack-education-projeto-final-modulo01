@@ -19,6 +19,7 @@ public class TokenController {
   @PostMapping("login")
   public ResponseEntity<LoginResponse> gerarToken(@RequestBody LoginRequest loginRequest) {
     LoginResponse loginResponse = tokenService.gerarToken(loginRequest);
+    log.info("POST /login -> 200 Login bem sucedido");
 
     return ResponseEntity.ok(loginResponse);
   }

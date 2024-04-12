@@ -26,7 +26,7 @@ public class UsuarioEntity implements Serializable {
   @JoinColumn(name = "id_papel", nullable = false)
   private PapelEntity papel;
 
-  public boolean senhaValida(LoginRequest loginRequest, BCryptPasswordEncoder bCryptEncoder) {
+  public boolean validarSenha(LoginRequest loginRequest, BCryptPasswordEncoder bCryptEncoder) {
     return bCryptEncoder.matches(
       loginRequest.senha(),
       this.senha
