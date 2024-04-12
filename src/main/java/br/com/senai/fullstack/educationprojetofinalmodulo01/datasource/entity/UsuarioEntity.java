@@ -1,4 +1,4 @@
-package br.com.senai.fullstack.educationprojetofinalmodulo01.entity;
+package br.com.senai.fullstack.educationprojetofinalmodulo01.datasource.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
