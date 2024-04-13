@@ -72,8 +72,8 @@ public class DocenteServiceImpl implements DocenteService {
   @Override
   public DocenteResponse cadastrar(CadastrarDocenteRequest request, String token) {
 
-    String nomePerfil =  tokenService.buscarCampo(token, "scope");
-    if (!nomePerfil.equals("ADM")){
+    String papel =  tokenService.buscarCampo(token, "scope");
+    if (!papel.equals("ADM")){
       throw new AcessoNaoAutorizadoException("Acesso não autorizado.");
     }
 
@@ -127,7 +127,11 @@ public class DocenteServiceImpl implements DocenteService {
 
     docente.setId(id);
 
-    docenteRepository.save(docente);
+    try {
+      docenteRepository.save(docente);
+    } catch (DataIntegrityViolationException e) {
+      throw new UsuarioInvalidoException("Usuário já está sendo utilizado.");
+    }
 
     return new DocenteResponse(docente.getId(), docente.getNome(), docente.getDataEntrada(), docente.getUsuario().getLogin());
   }
