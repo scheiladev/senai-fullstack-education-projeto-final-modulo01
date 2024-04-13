@@ -14,10 +14,11 @@ import org.springframework.web.bind.annotation.*;
 public class TokenController {
 
   private final TokenService tokenService;
-  private static long TEMPO_EXPIRACAO = 36000L;
 
   @PostMapping("login")
-  public ResponseEntity<LoginResponse> gerarToken(@RequestBody LoginRequest loginRequest) {
+  public ResponseEntity<LoginResponse> gerarToken(
+      @RequestBody LoginRequest loginRequest) {
+
     LoginResponse loginResponse = tokenService.gerarToken(loginRequest);
     log.info("POST /login -> 200 Login bem sucedido");
 
