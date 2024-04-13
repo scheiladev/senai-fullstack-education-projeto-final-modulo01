@@ -28,22 +28,22 @@ public class TokenService {
   private final JwtDecoder jwtDecoder;
   private final UsuarioRepository usuarioRepository;
 
-  private static long TEMPO_EXPIRACAO = 36000L;
+  private static long TEMPO_EXPIRACAO = 1296000L;
 
   public LoginResponse gerarToken(@RequestBody LoginRequest loginRequest) {
 
     if (loginRequest.login() == null ||
         loginRequest.senha() == null) {
-      throw new RequisicaoInvalidaException("Erro: todos os campos são obrigatórios.");
+      throw new RequisicaoInvalidaException("Todos os campos são obrigatórios.");
     }
 
     UsuarioEntity usuarioEntity = usuarioRepository
       .findByLogin(loginRequest.login())
-      .orElseThrow(() -> new NotFoundException("Erro: usuário não existe.")
+      .orElseThrow(() -> new NotFoundException("Usuário não existe.")
       );
 
     if (!usuarioEntity.validarSenha(loginRequest, bCryptEncoder)) {
-      throw new RequisicaoInvalidaException("Erro: senha incorreta.");
+      throw new RequisicaoInvalidaException("Senha incorreta.");
     }
 
     Instant now = Instant.now();

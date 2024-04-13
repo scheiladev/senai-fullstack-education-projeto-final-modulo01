@@ -1,10 +1,11 @@
 package br.com.senai.fullstack.educationprojetofinalmodulo01.datasource.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @Entity
@@ -19,7 +20,8 @@ public class DocenteEntity implements Serializable {
   private String nome;
 
   @Column(nullable = false)
-  private Date dataEntrada;
+  @JsonFormat(pattern = "dd/MM/yyyy")
+  private LocalDate dataEntrada;
 
   @OneToOne(optional = false)
   @JoinColumn(name = "id_usuario", nullable = false, unique = true)

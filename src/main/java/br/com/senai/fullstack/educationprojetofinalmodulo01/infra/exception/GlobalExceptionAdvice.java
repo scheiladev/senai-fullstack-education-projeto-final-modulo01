@@ -1,6 +1,7 @@
 package br.com.senai.fullstack.educationprojetofinalmodulo01.infra.exception;
 
 import br.com.senai.fullstack.educationprojetofinalmodulo01.infra.exception.customException.AcessoNaoAutorizadoException;
+import br.com.senai.fullstack.educationprojetofinalmodulo01.infra.exception.customException.UsuarioInvalidoException;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.infra.exception.customException.RequisicaoInvalidaException;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.infra.exception.customException.NotFoundException;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.controller.dto.ExceptionDto;
@@ -53,6 +54,16 @@ public class GlobalExceptionAdvice {
       .build();
     log.error("[STATUS 404] Dados não encontrados: {}", e.getMessage());
     return ResponseEntity.status(404).body(exceptionDto);
+  }
+
+  @ExceptionHandler(UsuarioInvalidoException.class)
+  public ResponseEntity<?> handle(UsuarioInvalidoException e) {
+    ExceptionDto exceptionDto = ExceptionDto.builder()
+      .codigo("400")
+      .mensagem(e.getMessage())
+      .build();
+    log.error("[STATUS 400] Usuário inválido: {}", e.getMessage());
+    return ResponseEntity.status(400).body(exceptionDto);
   }
 
   @ExceptionHandler(RequisicaoInvalidaException.class)

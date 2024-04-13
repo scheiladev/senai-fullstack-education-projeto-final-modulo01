@@ -10,10 +10,6 @@ import br.com.senai.fullstack.educationprojetofinalmodulo01.infra.exception.cust
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -26,19 +22,19 @@ public class UsuarioService {
 
   public UsuarioResponse cadastrarUsuario(CadastrarUsuarioRequest cadastrarUsuarioRequest, String token) {
 
-    String nomePerfil =  tokenService.buscarCampo(token, "scope");
-    if (!nomePerfil.equals("ADM")){
-      throw new AcessoNaoAutorizadoException("Erro: acesso não autorizado.");
+    String papel =  tokenService.buscarCampo(token, "scope");
+    if (!papel.equals("ADM")){
+      throw new AcessoNaoAutorizadoException("Acesso não autorizado.");
     }
 
     if (cadastrarUsuarioRequest.login() == null ||
         cadastrarUsuarioRequest.senha() == null ||
         cadastrarUsuarioRequest.papel() == null) {
-      throw new RequisicaoInvalidaException("Erro: todos os campos são obrigatórios.");
+      throw new RequisicaoInvalidaException("Todos os campos são obrigatórios.");
     }
 
     if (usuarioRepository.findByLogin(cadastrarUsuarioRequest.login()).isPresent()) {
-      throw new RequisicaoInvalidaException("Erro: usuário já existe.");
+      throw new RequisicaoInvalidaException("Usuário já existe.");
     }
 
     UsuarioEntity usuario = new UsuarioEntity();
@@ -50,6 +46,6 @@ public class UsuarioService {
 
     usuarioRepository.save(usuario);
 
-    return new UsuarioResponse(usuario.getLogin(), usuario.getPapel().getNome());
+    return new UsuarioResponse(usuario.getId(), usuario.getLogin(), usuario.getPapel().getNome());
   }
 }
