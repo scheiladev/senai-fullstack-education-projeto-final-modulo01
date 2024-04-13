@@ -47,7 +47,8 @@ public class DocenteServiceImpl implements DocenteService {
         docente.getId(),
         docente.getNome(),
         docente.getDataEntrada(),
-        docente.getUsuario().getLogin()))
+        docente.getUsuario().getLogin(),
+        docente.getUsuario().getPapel().getNome()))
       .collect(Collectors.toList());
   }
 
@@ -66,7 +67,8 @@ public class DocenteServiceImpl implements DocenteService {
       docente.getId(),
       docente.getNome(),
       docente.getDataEntrada(),
-      docente.getUsuario().getLogin());
+      docente.getUsuario().getLogin(),
+      docente.getUsuario().getPapel().getNome());
   }
 
   @Override
@@ -97,7 +99,12 @@ public class DocenteServiceImpl implements DocenteService {
       throw new UsuarioInvalidoException("Usuário já está sendo utilizado.");
     }
 
-    return new DocenteResponse(docente.getId(), docente.getNome(), docente.getDataEntrada(), docente.getUsuario().getLogin());
+    return new DocenteResponse(
+      docente.getId(),
+      docente.getNome(),
+      docente.getDataEntrada(),
+      docente.getUsuario().getLogin(),
+      docente.getUsuario().getPapel().getNome());
   }
 
   @Override
@@ -133,7 +140,12 @@ public class DocenteServiceImpl implements DocenteService {
       throw new UsuarioInvalidoException("Usuário já está sendo utilizado.");
     }
 
-    return new DocenteResponse(docente.getId(), docente.getNome(), docente.getDataEntrada(), docente.getUsuario().getLogin());
+    return new DocenteResponse(
+      docente.getId(),
+      docente.getNome(),
+      docente.getDataEntrada(),
+      docente.getUsuario().getLogin(),
+      docente.getUsuario().getPapel().getNome());
   }
 
 

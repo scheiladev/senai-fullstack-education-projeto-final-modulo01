@@ -3,17 +3,13 @@ package br.com.senai.fullstack.educationprojetofinalmodulo01.service.impl;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.controller.dto.request.CursoRequest;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.controller.dto.response.CursoResponse;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.datasource.entity.CursoEntity;
-import br.com.senai.fullstack.educationprojetofinalmodulo01.datasource.entity.UsuarioEntity;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.datasource.repository.CursoRepository;
-import br.com.senai.fullstack.educationprojetofinalmodulo01.datasource.repository.UsuarioRepository;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.infra.exception.customException.AcessoNaoAutorizadoException;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.infra.exception.customException.NotFoundException;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.infra.exception.customException.RequisicaoInvalidaException;
-import br.com.senai.fullstack.educationprojetofinalmodulo01.infra.exception.customException.UsuarioInvalidoException;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.service.CursoService;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.service.TokenService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,7 +20,6 @@ import java.util.stream.Collectors;
 public class CursoServiceImpl implements CursoService {
 
   private final CursoRepository cursoRepository;
-  private final UsuarioRepository usuarioRepository;
   private final TokenService tokenService;
 
   @Override
