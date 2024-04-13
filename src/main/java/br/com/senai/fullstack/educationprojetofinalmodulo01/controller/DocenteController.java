@@ -75,7 +75,7 @@ public class DocenteController {
       @RequestHeader(name = "Authorization") String token) {
 
     DocenteResponse docenteResponse = docenteService.alterar(id, alterarDocenteRequest, token.substring(7));
-    log.info("PUT /docentes/{} -> Atualizado", id);
+    log.info("PUT /docentes/{} -> Atualizado com sucesso", id);
     log.info("PUT /docentes/{} -> 200 OK", id);
     log.debug("PUT /docentes/{} -> Response Body:\n{}", id, JsonUtil.objetoParaJson(docenteResponse.toString()));
 
@@ -88,7 +88,7 @@ public class DocenteController {
       @RequestHeader(name = "Authorization") String token) {
 
     docenteService.apagar(id, token.substring(7));
-    log.info("DELETE /docentes/{} -> Excluído", id);
+    log.info("DELETE /docentes/{} -> Excluído com sucesso", id);
     log.info("DELETE /docentes/{} -> 204 NO CONTENT", id);
 
     return ResponseEntity.noContent().build();

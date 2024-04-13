@@ -1,9 +1,6 @@
 package br.com.senai.fullstack.educationprojetofinalmodulo01.infra.exception;
 
-import br.com.senai.fullstack.educationprojetofinalmodulo01.infra.exception.customException.AcessoNaoAutorizadoException;
-import br.com.senai.fullstack.educationprojetofinalmodulo01.infra.exception.customException.UsuarioInvalidoException;
-import br.com.senai.fullstack.educationprojetofinalmodulo01.infra.exception.customException.RequisicaoInvalidaException;
-import br.com.senai.fullstack.educationprojetofinalmodulo01.infra.exception.customException.NotFoundException;
+import br.com.senai.fullstack.educationprojetofinalmodulo01.infra.exception.customException.*;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.controller.dto.ExceptionDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -63,6 +60,16 @@ public class GlobalExceptionAdvice {
       .mensagem(e.getMessage())
       .build();
     log.error("[STATUS 400] Usuário inválido: {}", e.getMessage());
+    return ResponseEntity.status(400).body(exceptionDto);
+  }
+
+  @ExceptionHandler(ProfessorInexistenteException.class)
+  public ResponseEntity<?> handle(ProfessorInexistenteException e) {
+    ExceptionDto exceptionDto = ExceptionDto.builder()
+      .codigo("400")
+      .mensagem(e.getMessage())
+      .build();
+    log.error("[STATUS 400] Código de professor inválido: {}", e.getMessage());
     return ResponseEntity.status(400).body(exceptionDto);
   }
 
