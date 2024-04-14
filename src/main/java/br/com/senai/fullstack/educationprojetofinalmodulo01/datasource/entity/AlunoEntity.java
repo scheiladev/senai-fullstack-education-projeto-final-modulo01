@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @Entity
@@ -19,7 +19,7 @@ public class AlunoEntity implements Serializable {
   private String nome;
 
   @Column(nullable = false)
-  private Date dataNascimento;
+  private LocalDate dataNascimento;
 
   @OneToOne(optional = false)
   @JoinColumn(name = "id_usuario", nullable = false, unique = true)

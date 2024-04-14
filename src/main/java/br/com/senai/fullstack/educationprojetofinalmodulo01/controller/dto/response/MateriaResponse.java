@@ -1,4 +1,4 @@
 package br.com.senai.fullstack.educationprojetofinalmodulo01.controller.dto.response;
 
-public record UsuarioResponse(Long id, String login, String papel) {
+public record MateriaResponse(Long id, String nome, Long cursoId, String cursoNome) {
 }
