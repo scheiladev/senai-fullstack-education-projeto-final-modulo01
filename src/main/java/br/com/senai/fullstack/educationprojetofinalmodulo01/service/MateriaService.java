@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface MateriaService {
 
-  List<MateriaResponse> buscarTodos(String token);
+  List<MateriaResponse> buscarMateriasPorCurso(Long id, String token);
 
   MateriaResponse buscarPorId(Long id, String token);
 
