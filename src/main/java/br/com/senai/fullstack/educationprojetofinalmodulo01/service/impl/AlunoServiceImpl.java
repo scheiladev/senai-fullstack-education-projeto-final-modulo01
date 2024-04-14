@@ -95,6 +95,10 @@ public class AlunoServiceImpl implements AlunoService {
     TurmaEntity turma = turmaRepository.findById(request.turmaId())
       .orElseThrow(() -> new NotFoundException("Usuário não encontrado."));
 
+    if (!usuario.getPapel().getNome().equals("ALUNO") ) {
+      throw new UsuarioInvalidoException("Usuário precisar ser do tipo 'Aluno'.");
+    }
+
     AlunoEntity aluno = new AlunoEntity();
     aluno.setNome(request.nome());
     aluno.setDataNascimento(request.dataNascimento());

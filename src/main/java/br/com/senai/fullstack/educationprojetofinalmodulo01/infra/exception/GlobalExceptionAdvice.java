@@ -63,13 +63,13 @@ public class GlobalExceptionAdvice {
     return ResponseEntity.status(400).body(exceptionDto);
   }
 
-  @ExceptionHandler(ProfessorInexistenteException.class)
-  public ResponseEntity<?> handle(ProfessorInexistenteException e) {
+  @ExceptionHandler(CodigoInvalidoException.class)
+  public ResponseEntity<?> handle(CodigoInvalidoException e) {
     ExceptionDto exceptionDto = ExceptionDto.builder()
       .codigo("400")
       .mensagem(e.getMessage())
       .build();
-    log.error("[STATUS 400] Código de professor inválido: {}", e.getMessage());
+    log.error("[STATUS 400] Código inválido: {}", e.getMessage());
     return ResponseEntity.status(400).body(exceptionDto);
   }
 

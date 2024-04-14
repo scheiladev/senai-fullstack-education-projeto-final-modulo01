@@ -88,6 +88,10 @@ public class DocenteServiceImpl implements DocenteService {
     UsuarioEntity usuario = usuarioRepository.findByLogin(request.usuario())
       .orElseThrow(() -> new NotFoundException("Usuário não encontrado."));
 
+    if (usuario.getPapel().getNome().equals("ALUNO") ) {
+      throw new UsuarioInvalidoException("Usuário não pode ser do tipo 'Aluno'.");
+    }
+
     DocenteEntity docente = new DocenteEntity();
     docente.setNome(request.nome());
     docente.setDataEntrada(request.dataEntrada());

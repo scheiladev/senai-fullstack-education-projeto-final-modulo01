@@ -93,7 +93,7 @@ public class TurmaServiceImpl implements TurmaService {
       .orElseThrow(() -> new NotFoundException("Curso não encontrado."));
 
     if (!professor.getUsuario().getPapel().getNome().equals("PROFESSOR")) {
-      throw new ProfessorInexistenteException("Código não é de Professor.");
+      throw new CodigoInvalidoException("Código não é de Professor.");
     }
 
     TurmaEntity turma = new TurmaEntity();
