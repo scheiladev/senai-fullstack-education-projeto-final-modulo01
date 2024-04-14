@@ -23,10 +23,9 @@ public class UsuarioController {
   public ResponseEntity<UsuarioResponse> cadastrarUsuario(
       @Validated @RequestBody CadastrarUsuarioRequest cadastrarUsuarioRequest,
       @RequestHeader(name = "Authorization") String token) {
-
     UsuarioResponse usuarioResponse = usuarioService.cadastrarUsuario(cadastrarUsuarioRequest, token.substring(7));
     log.info("POST /usuarios/cadastro -> 201 CREATED");
-    log.debug("POST /usuarios/cadastro -> Response Body:\n{}", JsonUtil.objetoParaJson(usuarioResponse.toString()));
+    log.debug("POST /usuarios/cadastro -> Response Body:\n{}\n", JsonUtil.objetoParaJson(usuarioResponse.toString()));
 
     return ResponseEntity.status(HttpStatus.CREATED).body(usuarioResponse);
   }
