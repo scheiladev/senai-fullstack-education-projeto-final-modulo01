@@ -16,16 +16,17 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("materias")
+@RequestMapping
 public class MateriaController {
 
   private final MateriaService materiaService;
 
-  @GetMapping
-  public ResponseEntity<List<MateriaResponse>> buscarTodos(
+  @GetMapping("cursos/{id}/materias")
+  public ResponseEntity<List<MateriaResponse>> buscarMateriasPorCurso(
+      @PathVariable Long id,
       @RequestHeader(name = "Authorization") String token) {
 
-    List<MateriaResponse> listaMaterias = materiaService.buscarTodos(token.substring(7));
+    List<MateriaResponse> listaMaterias = materiaService.buscarMateriasPorCurso(id, token.substring(7));
 
     if (listaMaterias.isEmpty()) {
       log.info("GET /materias -> 404 Não há matérias cadastradas");
@@ -38,7 +39,7 @@ public class MateriaController {
     return ResponseEntity.status(HttpStatus.OK).body(listaMaterias);
   }
 
-  @GetMapping("{id}")
+  @GetMapping("materias/{id}")
   public ResponseEntity<MateriaResponse> buscarPorId(
       @PathVariable Long id,
       @RequestHeader(name = "Authorization") String token) {
@@ -55,7 +56,7 @@ public class MateriaController {
     return ResponseEntity.status(HttpStatus.OK).body(materiaResponse);
   }
 
-  @PostMapping
+  @PostMapping("materias")
   public ResponseEntity<MateriaResponse> cadastrarMateria(
       @Validated @RequestBody MateriaRequest materiaRequest,
       @RequestHeader(name = "Authorization") String token) {
@@ -67,7 +68,7 @@ public class MateriaController {
     return ResponseEntity.status(HttpStatus.CREATED).body(materiaResponse);
   }
 
-  @PutMapping("{id}")
+  @PutMapping("materias/{id}")
   public ResponseEntity<MateriaResponse> alterarMateria(
       @PathVariable Long id,
       @Validated @RequestBody MateriaRequest materiaRequest,
@@ -81,7 +82,7 @@ public class MateriaController {
     return ResponseEntity.status(HttpStatus.OK).body(materiaResponse);
   }
 
-  @DeleteMapping("{id}")
+  @DeleteMapping("materias/{id}")
   public ResponseEntity<Void> apagarMateria(
       @PathVariable Long id,
       @RequestHeader(name = "Authorization") String token) {

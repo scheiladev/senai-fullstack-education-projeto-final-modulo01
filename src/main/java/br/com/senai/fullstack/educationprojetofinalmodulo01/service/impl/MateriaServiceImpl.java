@@ -26,17 +26,21 @@ public class MateriaServiceImpl implements MateriaService {
   private final TokenService tokenService;
 
   @Override
-  public List<MateriaResponse> buscarTodos(String token) {
+  public List<MateriaResponse> buscarMateriasPorCurso(Long id, String token) {
 
     String papel =  tokenService.buscarCampo(token, "scope");
     if (!papel.equals("ADM")){
       throw new AcessoNaoAutorizadoException("Acesso não autorizado.");
     }
 
-    List<MateriaEntity> listaMaterias = materiaRepository.findAll();
+    List<MateriaEntity> listaMaterias = materiaRepository.findAllMateriasByCursoId(id);
+
+    if (cursoRepository.findById(id).isEmpty()) {
+      throw new NotFoundException("Curso não encontrado.");
+    }
 
     if (listaMaterias.isEmpty()) {
-      throw new NotFoundException("Não há materias cadastradas.");
+      throw new NotFoundException("Não há matérias cadastradas.");
     }
 
     return listaMaterias.stream()
@@ -57,7 +61,7 @@ public class MateriaServiceImpl implements MateriaService {
     }
 
     MateriaEntity materia = materiaRepository.findById(id)
-      .orElseThrow(() -> new NotFoundException("Materia não encontrada"));
+      .orElseThrow(() -> new NotFoundException("Matéria não encontrada"));
 
     return new MateriaResponse(
       materia.getId(),
