@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("usuarios")
+@RequestMapping
 public class UsuarioController {
 
   private final UsuarioService usuarioService;
@@ -25,8 +25,8 @@ public class UsuarioController {
       @RequestHeader(name = "Authorization") String token) {
 
     UsuarioResponse usuarioResponse = usuarioService.cadastrarUsuario(cadastrarUsuarioRequest, token.substring(7));
-    log.info("POST /usuarios/cadastro -> 201 CREATED");
-    log.debug("POST /usuarios/cadastro -> Response Body:\n{}", JsonUtil.objetoParaJson(usuarioResponse.toString()));
+    log.info("POST /cadastro -> 201 CREATED");
+    log.debug("POST /cadastro -> Response Body:\n{}", JsonUtil.objetoParaJson(usuarioResponse.toString()));
 
     return ResponseEntity.status(HttpStatus.CREATED).body(usuarioResponse);
   }

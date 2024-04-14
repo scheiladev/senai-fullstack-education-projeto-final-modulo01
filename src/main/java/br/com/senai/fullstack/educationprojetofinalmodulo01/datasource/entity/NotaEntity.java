@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @Entity
@@ -31,6 +31,6 @@ public class NotaEntity implements Serializable {
   private Double valor;
 
   @Column(nullable = false)
-  private Date data;
+  private LocalDate data;
 
 }
