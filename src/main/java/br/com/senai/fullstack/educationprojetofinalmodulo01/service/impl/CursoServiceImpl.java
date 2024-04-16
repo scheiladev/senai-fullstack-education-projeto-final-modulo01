@@ -5,11 +5,13 @@ import br.com.senai.fullstack.educationprojetofinalmodulo01.controller.dto.respo
 import br.com.senai.fullstack.educationprojetofinalmodulo01.datasource.entity.CursoEntity;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.datasource.repository.CursoRepository;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.infra.exception.customException.AcessoNaoAutorizadoException;
+import br.com.senai.fullstack.educationprojetofinalmodulo01.infra.exception.customException.ExclusaoNaoPermitidaException;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.infra.exception.customException.NotFoundException;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.infra.exception.customException.RequisicaoInvalidaException;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.service.CursoService;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.service.TokenService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,7 +28,7 @@ public class CursoServiceImpl implements CursoService {
   public List<CursoResponse> buscarTodos(String token) {
 
     String papel =  tokenService.buscarCampo(token, "scope");
-    if (!papel.equals("ADM")){
+    if (!papel.equals("ADM") && !papel.equals("PEDAGOGICO")) {
       throw new AcessoNaoAutorizadoException("Acesso não autorizado.");
     }
 
@@ -47,7 +49,7 @@ public class CursoServiceImpl implements CursoService {
   public CursoResponse buscarPorId(Long id, String token) {
 
     String papel =  tokenService.buscarCampo(token, "scope");
-    if (!papel.equals("ADM")){
+    if (!papel.equals("ADM") && !papel.equals("PEDAGOGICO")) {
       throw new AcessoNaoAutorizadoException("Acesso não autorizado.");
     }
 
@@ -63,12 +65,12 @@ public class CursoServiceImpl implements CursoService {
   public CursoResponse cadastrar(CursoRequest request, String token) {
 
     String papel =  tokenService.buscarCampo(token, "scope");
-    if (!papel.equals("ADM")){
+    if (!papel.equals("ADM") && !papel.equals("PEDAGOGICO")) {
       throw new AcessoNaoAutorizadoException("Acesso não autorizado.");
     }
 
     if (request.nome() == null) {
-      throw new RequisicaoInvalidaException("Todos os campos são obrigatórios.");
+      throw new RequisicaoInvalidaException("Campo 'nome' é obrigatório.");
     }
 
     CursoEntity curso = new CursoEntity();
@@ -83,7 +85,7 @@ public class CursoServiceImpl implements CursoService {
   public CursoResponse alterar(Long id, CursoRequest request, String token) {
 
     String papel =  tokenService.buscarCampo(token, "scope");
-    if (!papel.equals("ADM")){
+    if (!papel.equals("ADM") && !papel.equals("PEDAGOGICO")) {
       throw new AcessoNaoAutorizadoException("Acesso não autorizado.");
     }
 
@@ -113,7 +115,10 @@ public class CursoServiceImpl implements CursoService {
     CursoEntity curso = cursoRepository.findById(id)
       .orElseThrow(() -> new NotFoundException("Curso não encontrado"));
 
-    cursoRepository.delete(curso);
+    try {
+      cursoRepository.delete(curso);
+    } catch (DataIntegrityViolationException e) {
+      throw new ExclusaoNaoPermitidaException("Não é possível excluir este curso, pois ele possui vínculos.");
+    }
   }
-
 }

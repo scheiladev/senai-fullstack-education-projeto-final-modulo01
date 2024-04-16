@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @Entity
@@ -21,7 +22,7 @@ public class AlunoEntity implements Serializable {
   @Column(nullable = false)
   private LocalDate dataNascimento;
 
-  @OneToOne(optional = false)
+  @OneToOne(optional = false, cascade = CascadeType.REMOVE)
   @JoinColumn(name = "id_usuario", nullable = false, unique = true)
   private UsuarioEntity usuario;
 

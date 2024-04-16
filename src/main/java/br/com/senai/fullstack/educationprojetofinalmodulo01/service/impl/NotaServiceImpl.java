@@ -8,6 +8,7 @@ import br.com.senai.fullstack.educationprojetofinalmodulo01.infra.exception.cust
 import br.com.senai.fullstack.educationprojetofinalmodulo01.service.TokenService;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.service.NotaService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,7 +29,7 @@ public class NotaServiceImpl implements NotaService {
   public List<NotaResponse> buscarNotasPorAluno(Long id, String token) {
 
     String papel =  tokenService.buscarCampo(token, "scope");
-    if (!papel.equals("ADM")) {
+    if (!papel.equals("ADM") && !papel.equals("PROFESSOR")) {
       throw new AcessoNaoAutorizadoException("Acesso não autorizado.");
     }
 
@@ -55,8 +56,9 @@ public class NotaServiceImpl implements NotaService {
 
   @Override
   public NotaResponse buscarPorId(Long id, String token) {
+
     String papel =  tokenService.buscarCampo(token, "scope");
-    if (!papel.equals("ADM")) {
+    if (!papel.equals("ADM") && !papel.equals("PROFESSOR")) {
       throw new AcessoNaoAutorizadoException("Acesso não autorizado.");
     }
 
@@ -76,7 +78,7 @@ public class NotaServiceImpl implements NotaService {
   public NotaResponse cadastrar(NotaRequest request, String token) {
 
     String papel =  tokenService.buscarCampo(token, "scope");
-    if (!papel.equals("ADM")){
+    if (!papel.equals("ADM") && !papel.equals("PROFESSOR")) {
       throw new AcessoNaoAutorizadoException("Acesso não autorizado.");
     }
 
@@ -140,7 +142,7 @@ public class NotaServiceImpl implements NotaService {
   public NotaResponse alterar(Long id, NotaRequest request, String token) {
 
     String papel =  tokenService.buscarCampo(token, "scope");
-    if (!papel.equals("ADM")){
+    if (!papel.equals("ADM") && !papel.equals("PROFESSOR")) {
       throw new AcessoNaoAutorizadoException("Acesso não autorizado.");
     }
 
@@ -199,7 +201,11 @@ public class NotaServiceImpl implements NotaService {
     NotaEntity nota = notaRepository.findById(id)
       .orElseThrow(() -> new NotFoundException("Nota não encontrada"));
 
-    notaRepository.delete(nota);
+    try {
+      notaRepository.delete(nota);
+    } catch (DataIntegrityViolationException e) {
+      throw new ExclusaoNaoPermitidaException("Não é possível excluir esta nota, pois ela possui vínculos.");
+    }
   }
 
 }

@@ -7,11 +7,13 @@ import br.com.senai.fullstack.educationprojetofinalmodulo01.datasource.entity.Ma
 import br.com.senai.fullstack.educationprojetofinalmodulo01.datasource.repository.CursoRepository;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.datasource.repository.MateriaRepository;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.infra.exception.customException.AcessoNaoAutorizadoException;
+import br.com.senai.fullstack.educationprojetofinalmodulo01.infra.exception.customException.ExclusaoNaoPermitidaException;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.infra.exception.customException.NotFoundException;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.infra.exception.customException.RequisicaoInvalidaException;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.service.TokenService;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.service.MateriaService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -78,9 +80,12 @@ public class MateriaServiceImpl implements MateriaService {
       throw new AcessoNaoAutorizadoException("Acesso não autorizado.");
     }
 
-    if (request.nome() == null ||
-      request.cursoId() == null) {
-      throw new RequisicaoInvalidaException("Todos os campos são obrigatórios.");
+    if (request.nome() == null) {
+      throw new RequisicaoInvalidaException("Campo 'nome' é obrigatório.");
+    }
+
+    if (request.cursoId() == null) {
+      throw new RequisicaoInvalidaException("Campo 'cursoId' é obrigatório.");
     }
 
     CursoEntity curso = cursoRepository.findById(request.cursoId())
@@ -142,7 +147,11 @@ public class MateriaServiceImpl implements MateriaService {
     MateriaEntity materia = materiaRepository.findById(id)
       .orElseThrow(() -> new NotFoundException("Matéria não encontrada"));
 
-    materiaRepository.delete(materia);
+    try {
+      materiaRepository.delete(materia);
+    } catch (DataIntegrityViolationException e) {
+      throw new ExclusaoNaoPermitidaException("Não é possível excluir esta matéria, pois ela possui vínculos.");
+    }
   }
 
 }

@@ -56,11 +56,21 @@ public class GlobalExceptionAdvice {
   @ExceptionHandler(UsuarioInvalidoException.class)
   public ResponseEntity<?> handle(UsuarioInvalidoException e) {
     ExceptionDto exceptionDto = ExceptionDto.builder()
-      .codigo("400")
+      .codigo("403")
       .mensagem(e.getMessage())
       .build();
-    log.error("[STATUS 400] Usuário inválido: {}", e.getMessage());
-    return ResponseEntity.status(400).body(exceptionDto);
+    log.error("[STATUS 403] Usuário inválido: {}", e.getMessage());
+    return ResponseEntity.status(403).body(exceptionDto);
+  }
+
+  @ExceptionHandler(ExclusaoNaoPermitidaException.class)
+  public ResponseEntity<?> handle(ExclusaoNaoPermitidaException e) {
+    ExceptionDto exceptionDto = ExceptionDto.builder()
+      .codigo("403")
+      .mensagem(e.getMessage())
+      .build();
+    log.error("[STATUS 403] Usuário inválido: {}", e.getMessage());
+    return ResponseEntity.status(403).body(exceptionDto);
   }
 
   @ExceptionHandler(CodigoInvalidoException.class)
@@ -85,12 +95,12 @@ public class GlobalExceptionAdvice {
 
   @ExceptionHandler(DataIntegrityViolationException.class)
   public ResponseEntity<?> handler(DataIntegrityViolationException e) {
-    log.error("[STATUS 400] Violação de integridade: {}", e.getMessage());
+    log.error("[STATUS 403] Violação de integridade: {}", e.getMessage());
     ExceptionDto exceptionDto = ExceptionDto.builder()
-      .codigo("400")
+      .codigo("403")
       .mensagem(e.getMessage())
       .build();
-    return ResponseEntity.status(400).body(exceptionDto);
+    return ResponseEntity.status(403).body(exceptionDto);
   }
 
   @ExceptionHandler(IllegalStateException.class)
