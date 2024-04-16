@@ -29,10 +29,16 @@ public class UsuarioServiceImpl implements UsuarioService {
       throw new AcessoNaoAutorizadoException("Acesso não autorizado.");
     }
 
-    if (cadastrarUsuarioRequest.login() == null ||
-      cadastrarUsuarioRequest.senha() == null ||
-      cadastrarUsuarioRequest.papel() == null) {
-      throw new RequisicaoInvalidaException("Todos os campos são obrigatórios.");
+    if (cadastrarUsuarioRequest.login() == null) {
+      throw new RequisicaoInvalidaException("Campo 'login' é obrigatório.");
+    }
+
+    if (cadastrarUsuarioRequest.senha() == null) {
+      throw new RequisicaoInvalidaException("Campo 'senha' é obrigatório.");
+    }
+
+    if (cadastrarUsuarioRequest.papel() == null) {
+      throw new RequisicaoInvalidaException("Campo 'papel' é obrigatório.");
     }
 
     if (usuarioRepository.findByLogin(cadastrarUsuarioRequest.login()).isPresent()) {

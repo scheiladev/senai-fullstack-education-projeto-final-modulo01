@@ -18,7 +18,7 @@ public class TurmaEntity implements Serializable {
   @Column(nullable = false)
   private String nome;
 
-  @ManyToOne
+  @ManyToOne(optional = false)
   @JoinColumn(name = "id_professor", nullable = false)
   private DocenteEntity professor;
 
@@ -28,5 +28,4 @@ public class TurmaEntity implements Serializable {
 
   @OneToMany(mappedBy = "turma")
   private List<AlunoEntity> alunos;
-
 }

@@ -23,9 +23,8 @@ public class DocenteEntity implements Serializable {
   @JsonFormat(pattern = "dd/MM/yyyy")
   private LocalDate dataEntrada;
 
-  @OneToOne(optional = false)
+  @OneToOne(optional = false, cascade = CascadeType.REMOVE)
   @JoinColumn(name = "id_usuario", nullable = false, unique = true)
   private UsuarioEntity usuario;
-
 
 }

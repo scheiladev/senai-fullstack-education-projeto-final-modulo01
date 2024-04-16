@@ -20,5 +20,4 @@ public class MateriaEntity implements Serializable {
   @ManyToOne(optional = false)
   @JoinColumn(name = "id_curso", nullable = false)
   private CursoEntity curso;
-
 }

@@ -11,6 +11,7 @@ import br.com.senai.fullstack.educationprojetofinalmodulo01.infra.exception.cust
 import br.com.senai.fullstack.educationprojetofinalmodulo01.infra.exception.customException.NotFoundException;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.infra.exception.customException.RequisicaoInvalidaException;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.infra.exception.customException.UsuarioInvalidoException;
+import br.com.senai.fullstack.educationprojetofinalmodulo01.infra.exception.customException.ExclusaoNaoPermitidaException;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.service.DocenteService;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.service.TokenService;
 import lombok.RequiredArgsConstructor;
@@ -32,8 +33,25 @@ public class DocenteServiceImpl implements DocenteService {
   public List<DocenteResponse> buscarTodos(String token) {
 
     String papel =  tokenService.buscarCampo(token, "scope");
-    if (!papel.equals("ADM")){
+    if (!papel.equals("ADM") && !papel.equals("PEDAGOGICO") && !papel.equals("RECRUITER")) {
       throw new AcessoNaoAutorizadoException("Acesso não autorizado.");
+    }
+
+    if (!papel.equals("ADM")) {
+      List<DocenteEntity> listaProfessores = docenteRepository.findAllDocentesWithPapelProfessor();
+
+      if (listaProfessores.isEmpty()) {
+        throw new NotFoundException("Não há professores cadastrados.");
+      }
+
+      return listaProfessores.stream()
+        .map(docente -> new DocenteResponse(
+          docente.getId(),
+          docente.getNome(),
+          docente.getDataEntrada(),
+          docente.getUsuario().getLogin(),
+          docente.getUsuario().getPapel().getNome()))
+        .collect(Collectors.toList());
     }
 
     List<DocenteEntity> listaDocentes = docenteRepository.findAll();
@@ -56,12 +74,27 @@ public class DocenteServiceImpl implements DocenteService {
   public DocenteResponse buscarPorId(Long id, String token) {
 
     String papel =  tokenService.buscarCampo(token, "scope");
-    if (!papel.equals("ADM")){
+    if (!papel.equals("ADM") && !papel.equals("PEDAGOGICO") && !papel.equals("RECRUITER")) {
       throw new AcessoNaoAutorizadoException("Acesso não autorizado.");
     }
 
+    if (!papel.equals("ADM")) {
+      DocenteEntity professor = docenteRepository.findByIdWithPapelProfessor(id);
+
+      if (professor == null) {
+        throw new NotFoundException("Professor não encontrado ou id não é de Professor.");
+      }
+
+      return new DocenteResponse(
+        professor.getId(),
+        professor.getNome(),
+        professor.getDataEntrada(),
+        professor.getUsuario().getLogin(),
+        professor.getUsuario().getPapel().getNome());
+    }
+
     DocenteEntity docente = docenteRepository.findById(id)
-      .orElseThrow(() -> new NotFoundException("Docente não encontrado"));
+      .orElseThrow(() -> new NotFoundException("Docente não encontrado."));
 
     return new DocenteResponse(
       docente.getId(),
@@ -74,22 +107,32 @@ public class DocenteServiceImpl implements DocenteService {
   @Override
   public DocenteResponse cadastrar(CadastrarDocenteRequest request, String token) {
 
-    String papel =  tokenService.buscarCampo(token, "scope");
-    if (!papel.equals("ADM")){
+    String papel = tokenService.buscarCampo(token, "scope");
+    if (!papel.equals("ADM") && !papel.equals("PEDAGOGICO") && !papel.equals("RECRUITER")) {
       throw new AcessoNaoAutorizadoException("Acesso não autorizado.");
     }
 
-    if (request.nome() == null ||
-      request.dataEntrada() == null ||
-      request.usuario() == null) {
-      throw new RequisicaoInvalidaException("Todos os campos são obrigatórios.");
+    if (request.nome() == null) {
+      throw new RequisicaoInvalidaException("Campo 'nome' é obrigatório.");
+    }
+
+    if (request.dataEntrada() == null) {
+      throw new RequisicaoInvalidaException("Campo 'dataEntrada' é obrigatório.");
+    }
+
+    if (request.usuario() == null) {
+      throw new RequisicaoInvalidaException("Campo 'usuario' é obrigatório.");
     }
 
     UsuarioEntity usuario = usuarioRepository.findByLogin(request.usuario())
       .orElseThrow(() -> new NotFoundException("Usuário não encontrado."));
 
-    if (usuario.getPapel().getNome().equals("ALUNO") ) {
-      throw new UsuarioInvalidoException("Usuário não pode ser do tipo 'Aluno'.");
+    if (!papel.equals("ADM") && !usuario.getPapel().getNome().equals("PROFESSOR")) {
+      throw new UsuarioInvalidoException("Usuário deve ter papel de 'PROFESSOR'.");
+    }
+
+    if (usuario.getPapel().getNome().equals("ALUNO")) {
+      throw new UsuarioInvalidoException("Usuário deve ter papel diferente de 'ALUNO'.");
     }
 
     DocenteEntity docente = new DocenteEntity();
@@ -115,7 +158,7 @@ public class DocenteServiceImpl implements DocenteService {
   public DocenteResponse alterar(Long id, AlterarDocenteRequest request, String token) {
 
     String papel =  tokenService.buscarCampo(token, "scope");
-    if (!papel.equals("ADM")){
+    if (!papel.equals("ADM") && !papel.equals("PEDAGOGICO") && !papel.equals("RECRUITER")) {
       throw new AcessoNaoAutorizadoException("Acesso não autorizado.");
     }
 
@@ -130,10 +173,12 @@ public class DocenteServiceImpl implements DocenteService {
       docente.setDataEntrada(request.dataEntrada());
     }
 
-    if (request.usuario() != null && !docente.getUsuario().getLogin().equals(request.usuario())) {
-      UsuarioEntity usuario = usuarioRepository.findByLogin(request.usuario())
-        .orElseThrow(() -> new NotFoundException("Usuário não encontrado"));
-      docente.setUsuario(usuario);
+    if (request.usuario() != null) {
+      throw new RequisicaoInvalidaException("Usuário não pode ser alterado.");
+    }
+
+    if (!papel.equals("ADM") && !docente.getUsuario().getPapel().getNome().equals("PROFESSOR")) {
+        throw new UsuarioInvalidoException("Não é possível alterar este cadastro. O usuário é diferente de 'PROFESSOR'.");
     }
 
     docente.setId(id);
@@ -164,7 +209,11 @@ public class DocenteServiceImpl implements DocenteService {
     DocenteEntity docente = docenteRepository.findById(id)
       .orElseThrow(() -> new NotFoundException("Docente não encontrado"));
 
-    docenteRepository.delete(docente);
+    try {
+      docenteRepository.delete(docente);
+    } catch (DataIntegrityViolationException e) {
+      throw new ExclusaoNaoPermitidaException("Não é possível excluir este cadastro, pois ele possui vínculos.");
+    }
   }
 
 }

@@ -13,6 +13,7 @@ import br.com.senai.fullstack.educationprojetofinalmodulo01.infra.exception.cust
 import br.com.senai.fullstack.educationprojetofinalmodulo01.service.TurmaService;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.service.TokenService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,7 +32,7 @@ public class TurmaServiceImpl implements TurmaService {
   public List<TurmaResponse> buscarTodos(String token) {
 
     String papel =  tokenService.buscarCampo(token, "scope");
-    if (!papel.equals("ADM")){
+    if (!papel.equals("ADM") && !papel.equals("PEDAGOGICO")) {
       throw new AcessoNaoAutorizadoException("Acesso não autorizado.");
     }
 
@@ -56,7 +57,7 @@ public class TurmaServiceImpl implements TurmaService {
   public TurmaResponse buscarPorId(Long id, String token) {
 
     String papel =  tokenService.buscarCampo(token, "scope");
-    if (!papel.equals("ADM")){
+    if (!papel.equals("ADM") && !papel.equals("PEDAGOGICO")) {
       throw new AcessoNaoAutorizadoException("Acesso não autorizado.");
     }
 
@@ -76,14 +77,20 @@ public class TurmaServiceImpl implements TurmaService {
   public TurmaResponse cadastrar(CadastrarTurmaRequest request, String token) {
 
     String papel =  tokenService.buscarCampo(token, "scope");
-    if (!papel.equals("ADM")){
+    if (!papel.equals("ADM") && !papel.equals("PEDAGOGICO")) {
       throw new AcessoNaoAutorizadoException("Acesso não autorizado.");
     }
 
-    if (request.nome() == null ||
-      request.professorId() == null ||
-      request.cursoId() == null) {
-      throw new RequisicaoInvalidaException("Todos os campos são obrigatórios.");
+    if (request.nome() == null) {
+      throw new RequisicaoInvalidaException("Campo 'nome' é obrigatório.");
+    }
+
+    if (request.professorId() == null) {
+      throw new RequisicaoInvalidaException("Campo 'professorId' é obrigatório.");
+    }
+
+    if (request.cursoId() == null) {
+      throw new RequisicaoInvalidaException("Campo 'cursoId' é obrigatório.");
     }
 
     DocenteEntity professor = docenteRepository.findById(request.professorId())
@@ -116,7 +123,7 @@ public class TurmaServiceImpl implements TurmaService {
   public TurmaResponse alterar(Long id, AlterarTurmaRequest request, String token) {
 
     String papel =  tokenService.buscarCampo(token, "scope");
-    if (!papel.equals("ADM")){
+    if (!papel.equals("ADM") && !papel.equals("PEDAGOGICO")) {
       throw new AcessoNaoAutorizadoException("Acesso não autorizado.");
     }
 
@@ -165,7 +172,11 @@ public class TurmaServiceImpl implements TurmaService {
     TurmaEntity turma = turmaRepository.findById(id)
       .orElseThrow(() -> new NotFoundException("Turma não encontrada"));
 
-    turmaRepository.delete(turma);
+    try {
+      turmaRepository.delete(turma);
+    } catch (DataIntegrityViolationException e) {
+      throw new ExclusaoNaoPermitidaException("Não é possível excluir esta turma, pois ela possui vínculos.");
+    }
   }
 
 }

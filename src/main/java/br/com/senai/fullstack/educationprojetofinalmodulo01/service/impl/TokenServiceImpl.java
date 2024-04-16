@@ -32,9 +32,12 @@ public class TokenServiceImpl implements TokenService {
 
   public LoginResponse gerarToken(LoginRequest loginRequest) {
 
-    if (loginRequest.login() == null ||
-      loginRequest.senha() == null) {
-      throw new RequisicaoInvalidaException("Todos os campos são obrigatórios.");
+    if (loginRequest.login() == null) {
+      throw new RequisicaoInvalidaException("Campo 'login' é obrigatório.");
+    }
+
+    if (loginRequest.senha() == null) {
+      throw new RequisicaoInvalidaException("Campo 'senha' é obrigatório.");
     }
 
     UsuarioEntity usuarioEntity = usuarioRepository
