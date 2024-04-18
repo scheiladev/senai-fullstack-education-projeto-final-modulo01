@@ -16,4 +16,5 @@ public class PapelEntity implements Serializable {
 
   @Column(nullable = false, unique = true, length = 50)
   private String nome;
+
 }

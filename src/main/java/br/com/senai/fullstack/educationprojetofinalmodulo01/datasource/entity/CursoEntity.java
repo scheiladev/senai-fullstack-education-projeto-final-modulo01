@@ -15,12 +15,13 @@ public class CursoEntity implements Serializable {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(nullable = false)
+  @Column(nullable = false, unique = true)
   private String nome;
 
-  @OneToMany(mappedBy = "curso")
+  @OneToMany(mappedBy = "curso", fetch = FetchType.EAGER)
   private List<TurmaEntity> turmas;
 
-  @OneToMany(mappedBy = "curso")
+  @OneToMany(mappedBy = "curso", fetch = FetchType.EAGER)
   private List<MateriaEntity> materias;
+
 }

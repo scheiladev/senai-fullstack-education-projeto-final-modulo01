@@ -3,6 +3,7 @@ package br.com.senai.fullstack.educationprojetofinalmodulo01.controller;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.controller.dto.request.AlterarAlunoRequest;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.controller.dto.request.CadastrarAlunoRequest;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.controller.dto.response.AlunoResponse;
+import br.com.senai.fullstack.educationprojetofinalmodulo01.controller.dto.response.PontuacaoResponse;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.infra.utils.JsonUtil;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.service.AlunoService;
 import lombok.RequiredArgsConstructor;
@@ -56,6 +57,23 @@ public class AlunoController {
     return ResponseEntity.status(HttpStatus.OK).body(alunoResponse);
   }
 
+  @GetMapping("{id}/pontuacao")
+  public ResponseEntity<PontuacaoResponse> buscarPontuacao(
+    @PathVariable Long id,
+    @RequestHeader(name = "Authorization") String token) {
+
+    PontuacaoResponse pontuacaoResponse = alunoService.buscarPontuacao(id, token.substring(7));
+
+    if (pontuacaoResponse == null) {
+      log.info("GET /alunos -> 404 Aluno não encontrado");
+    } else {
+      log.info("GET /alunos -> 200 OK");
+      log.debug("GET /alunos -> Response Body:\n{}", JsonUtil.objetoParaJson(pontuacaoResponse.toString()));
+    }
+
+    return ResponseEntity.status(HttpStatus.OK).body(pontuacaoResponse);
+  }
+
   @PostMapping
   public ResponseEntity<AlunoResponse> cadastrarAluno(
       @Validated @RequestBody CadastrarAlunoRequest cadastrarAlunoRequest,
@@ -93,4 +111,5 @@ public class AlunoController {
 
     return ResponseEntity.noContent().build();
   }
+
 }

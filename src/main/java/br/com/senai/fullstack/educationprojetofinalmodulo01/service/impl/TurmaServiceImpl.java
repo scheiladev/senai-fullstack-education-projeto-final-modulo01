@@ -81,6 +81,10 @@ public class TurmaServiceImpl implements TurmaService {
       throw new AcessoNaoAutorizadoException("Acesso não autorizado.");
     }
 
+    if (!turmaRepository.findAllCursoIdAndNomeTurma(request.cursoId(), request.nome()).isEmpty()) {
+      throw new ConflitoDeDadosException("Nome de turma já existe para este Curso.");
+    }
+
     if (request.nome() == null) {
       throw new RequisicaoInvalidaException("Campo 'nome' é obrigatório.");
     }
@@ -130,6 +134,10 @@ public class TurmaServiceImpl implements TurmaService {
     TurmaEntity turma = turmaRepository.findById(id)
       .orElseThrow(() -> new NotFoundException("Turma não encontrada"));
 
+    if (!turmaRepository.findAllCursoIdAndNomeTurma(request.cursoId(), request.nome()).isEmpty()) {
+      throw new ConflitoDeDadosException("Nome de turma já existe para este Curso.");
+    }
+
     if (request.nome() != null && !turma.getNome().equals(request.nome())) {
       turma.setNome(request.nome());
     }
@@ -149,7 +157,7 @@ public class TurmaServiceImpl implements TurmaService {
     }
 
     turma.setId(id);
-      turmaRepository.save(turma);
+    turmaRepository.save(turma);
 
     return new TurmaResponse(
       turma.getId(),
@@ -159,7 +167,6 @@ public class TurmaServiceImpl implements TurmaService {
       turma.getCurso().getId(),
       turma.getCurso().getNome());
   }
-
 
   @Override
   public void apagar(Long id, String token) {

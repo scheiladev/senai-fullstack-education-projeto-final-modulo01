@@ -4,10 +4,7 @@ import br.com.senai.fullstack.educationprojetofinalmodulo01.controller.dto.reque
 import br.com.senai.fullstack.educationprojetofinalmodulo01.controller.dto.response.CursoResponse;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.datasource.entity.CursoEntity;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.datasource.repository.CursoRepository;
-import br.com.senai.fullstack.educationprojetofinalmodulo01.infra.exception.customException.AcessoNaoAutorizadoException;
-import br.com.senai.fullstack.educationprojetofinalmodulo01.infra.exception.customException.ExclusaoNaoPermitidaException;
-import br.com.senai.fullstack.educationprojetofinalmodulo01.infra.exception.customException.NotFoundException;
-import br.com.senai.fullstack.educationprojetofinalmodulo01.infra.exception.customException.RequisicaoInvalidaException;
+import br.com.senai.fullstack.educationprojetofinalmodulo01.infra.exception.customException.*;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.service.CursoService;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.service.TokenService;
 import lombok.RequiredArgsConstructor;
@@ -73,6 +70,10 @@ public class CursoServiceImpl implements CursoService {
       throw new RequisicaoInvalidaException("Campo 'nome' é obrigatório.");
     }
 
+    if (cursoRepository.findByNome(request.nome()).isPresent()) {
+      throw new ConflitoDeDadosException("Curso já existe.");
+    }
+
     CursoEntity curso = new CursoEntity();
     curso.setNome(request.nome());
 
@@ -96,13 +97,15 @@ public class CursoServiceImpl implements CursoService {
       curso.setNome(request.nome());
     }
 
-    curso.setId(id);
+    if (cursoRepository.findByNome(request.nome()).isPresent()) {
+      throw new ConflitoDeDadosException("Curso já existe.");
+    }
 
+    curso.setId(id);
     cursoRepository.save(curso);
 
     return new CursoResponse(curso.getId(), curso.getNome());
   }
-
 
   @Override
   public void apagar(Long id, String token) {
@@ -121,4 +124,5 @@ public class CursoServiceImpl implements CursoService {
       throw new ExclusaoNaoPermitidaException("Não é possível excluir este curso, pois ele possui vínculos.");
     }
   }
+
 }

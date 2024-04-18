@@ -6,6 +6,7 @@ import br.com.senai.fullstack.educationprojetofinalmodulo01.datasource.entity.Us
 import br.com.senai.fullstack.educationprojetofinalmodulo01.datasource.repository.PapelRepository;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.datasource.repository.UsuarioRepository;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.infra.exception.customException.AcessoNaoAutorizadoException;
+import br.com.senai.fullstack.educationprojetofinalmodulo01.infra.exception.customException.ConflitoDeDadosException;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.infra.exception.customException.RequisicaoInvalidaException;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.service.TokenService;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.service.UsuarioService;
@@ -42,7 +43,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     if (usuarioRepository.findByLogin(cadastrarUsuarioRequest.login()).isPresent()) {
-      throw new RequisicaoInvalidaException("Usuário já existe.");
+      throw new ConflitoDeDadosException("Usuário já existe.");
     }
 
     UsuarioEntity usuario = new UsuarioEntity();
@@ -56,4 +57,5 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     return new UsuarioResponse(usuario.getId(), usuario.getLogin(), usuario.getPapel().getNome());
   }
+
 }

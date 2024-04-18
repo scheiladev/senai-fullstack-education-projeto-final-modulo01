@@ -116,10 +116,6 @@ public class DocenteServiceImpl implements DocenteService {
       throw new RequisicaoInvalidaException("Campo 'nome' é obrigatório.");
     }
 
-    if (request.dataEntrada() == null) {
-      throw new RequisicaoInvalidaException("Campo 'dataEntrada' é obrigatório.");
-    }
-
     if (request.usuario() == null) {
       throw new RequisicaoInvalidaException("Campo 'usuario' é obrigatório.");
     }
@@ -182,12 +178,7 @@ public class DocenteServiceImpl implements DocenteService {
     }
 
     docente.setId(id);
-
-    try {
-      docenteRepository.save(docente);
-    } catch (DataIntegrityViolationException e) {
-      throw new UsuarioInvalidoException("Usuário já está sendo utilizado.");
-    }
+    docenteRepository.save(docente);
 
     return new DocenteResponse(
       docente.getId(),
@@ -196,7 +187,6 @@ public class DocenteServiceImpl implements DocenteService {
       docente.getUsuario().getLogin(),
       docente.getUsuario().getPapel().getNome());
   }
-
 
   @Override
   public void apagar(Long id, String token) {

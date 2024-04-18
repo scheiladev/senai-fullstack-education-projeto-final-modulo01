@@ -127,7 +127,7 @@ public class MateriaServiceImpl implements MateriaService {
     }
 
     materia.setId(id);
-      materiaRepository.save(materia);
+    materiaRepository.save(materia);
 
     return new MateriaResponse(
       materia.getId(),

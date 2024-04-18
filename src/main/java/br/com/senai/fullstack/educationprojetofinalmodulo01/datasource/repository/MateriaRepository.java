@@ -16,4 +16,14 @@ public interface MateriaRepository extends JpaRepository<MateriaEntity, Long> {
     " where materia.curso.id = :id"
   )
   List<MateriaEntity> findAllMateriasByCursoId(@Param("id") Long id);
+
+  @Query(
+    " select materia from MateriaEntity materia " +
+    " join CursoEntity curso on curso.id = materia.curso.id" +
+    " join TurmaEntity turma on turma.curso.id = curso.id" +
+    " join AlunoEntity aluno on aluno.turma.id = turma.id" +
+    " where aluno.id = :id"
+  )
+  List<MateriaEntity> findAllMateriasByCursoByAlunoId(@Param("id") Long id);
+
 }

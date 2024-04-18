@@ -6,4 +6,5 @@ import br.com.senai.fullstack.educationprojetofinalmodulo01.controller.dto.respo
 public interface UsuarioService {
 
   UsuarioResponse cadastrarUsuario(CadastrarUsuarioRequest cadastrarUsuarioRequest, String token);
+
 }

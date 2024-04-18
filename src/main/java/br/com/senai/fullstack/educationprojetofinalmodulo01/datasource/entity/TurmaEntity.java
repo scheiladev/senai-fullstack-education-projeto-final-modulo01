@@ -18,14 +18,15 @@ public class TurmaEntity implements Serializable {
   @Column(nullable = false)
   private String nome;
 
-  @ManyToOne(optional = false)
+  @ManyToOne(optional = false, fetch = FetchType.EAGER)
   @JoinColumn(name = "id_professor", nullable = false)
   private DocenteEntity professor;
 
-  @ManyToOne(optional = false)
+  @ManyToOne(optional = false, fetch = FetchType.EAGER)
   @JoinColumn(name = "id_curso", nullable = false)
   private CursoEntity curso;
 
   @OneToMany(mappedBy = "turma")
   private List<AlunoEntity> alunos;
+
 }
