@@ -25,7 +25,7 @@ public class GlobalExceptionAdvice {
 
   @ExceptionHandler(AcessoNaoAutorizadoException.class)
   public ResponseEntity<?> handler(AcessoNaoAutorizadoException e) {
-    log.error("[STATUS 401] Acesso não autorizado: {}", e.getMessage());
+    log.error("[STATUS 401] Credencial inválida: {}", e.getMessage());
     ExceptionDto exceptionDto = ExceptionDto.builder()
       .codigo("401")
       .mensagem(e.getMessage())
@@ -69,7 +69,7 @@ public class GlobalExceptionAdvice {
       .codigo("403")
       .mensagem(e.getMessage())
       .build();
-    log.error("[STATUS 403] Usuário inválido: {}", e.getMessage());
+    log.error("[STATUS 403] Exclusão não permitida: {}", e.getMessage());
     return ResponseEntity.status(403).body(exceptionDto);
   }
 
@@ -90,6 +90,16 @@ public class GlobalExceptionAdvice {
       .mensagem(e.getMessage())
       .build();
     log.error("[STATUS 400] Dados ausentes ou incorretos: {}", e.getMessage());
+    return ResponseEntity.status(400).body(exceptionDto);
+  }
+
+  @ExceptionHandler(ConflitoDeDadosException.class)
+  public ResponseEntity<?> handle(ConflitoDeDadosException e) {
+    ExceptionDto exceptionDto = ExceptionDto.builder()
+      .codigo("403")
+      .mensagem(e.getMessage())
+      .build();
+    log.error("[STATUS 403] Conflito de dados: {}", e.getMessage());
     return ResponseEntity.status(400).body(exceptionDto);
   }
 
@@ -122,4 +132,5 @@ public class GlobalExceptionAdvice {
       .build();
     return ResponseEntity.status(403).body(exceptionDto);
   }
+
 }

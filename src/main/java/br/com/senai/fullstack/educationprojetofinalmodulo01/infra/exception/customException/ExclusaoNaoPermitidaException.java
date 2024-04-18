@@ -8,4 +8,5 @@ public class ExclusaoNaoPermitidaException extends RuntimeException {
   public ExclusaoNaoPermitidaException(String message) {
     super(message);
   }
+
 }

@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 public class NotaServiceImpl implements NotaService {
 
   private final NotaRepository notaRepository;
-  private final UsuarioRepository usuarioRepository;
   private final AlunoRepository alunoRepository;
   private final DocenteRepository docenteRepository;
   private final MateriaRepository materiaRepository;
@@ -82,11 +81,6 @@ public class NotaServiceImpl implements NotaService {
       throw new AcessoNaoAutorizadoException("Acesso não autorizado.");
     }
 
-    Long usuarioId = Long.valueOf(tokenService.buscarCampo(token, "sub"));
-
-    UsuarioEntity usuario = usuarioRepository.findById(usuarioId)
-      .orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
-
     if (request.alunoId() == null) {
       throw new RequisicaoInvalidaException("Campo 'alunoId' é obrigatório.");
     }
@@ -114,28 +108,40 @@ public class NotaServiceImpl implements NotaService {
       .orElseThrow(() -> new NotFoundException("Professor não encontrado."));
 
     MateriaEntity materia = materiaRepository.findById(request.materiaId())
-      .orElseThrow(() -> new NotFoundException("Curso não encontrado."));
+      .orElseThrow(() -> new NotFoundException("Matéria não encontrada."));
+
+    if (!professor.getUsuario().getPapel().getNome().equals("PROFESSOR")) {
+      throw new CodigoInvalidoException("Código não é de um Professor.");
+    }
 
     if (!aluno.getUsuario().getPapel().getNome().equals("ALUNO")) {
       throw new CodigoInvalidoException("Código não é de um Aluno.");
-    } else {
-      NotaEntity nota = new NotaEntity();
-      nota.setAluno(aluno);
-      nota.setProfessor(professor);
-      nota.setMateria(materia);
-      nota.setValor(request.valor());
-      nota.setData(request.data());
-
-      notaRepository.save(nota);
-
-      return new NotaResponse(
-        nota.getId(),
-        nota.getAluno().getNome(),
-        nota.getProfessor().getNome(),
-        nota.getMateria().getNome(),
-        nota.getValor(),
-        nota.getData());
     }
+
+    if (!notaRepository.existsByAlunoAndProfessorAndMateria(request.alunoId(), request.professorId(), request.materiaId())) {
+      throw new CodigoInvalidoException("Os dados informados são incompatíveis. " +
+        "Verifique as informações: " +
+        "O aluno não está matriculado nesta matéria, ou " +
+        "O professor não leciona esta matéria; ou " +
+        "A matéria não faz parte deste curso.");
+    }
+
+    NotaEntity nota = new NotaEntity();
+    nota.setAluno(aluno);
+    nota.setProfessor(professor);
+    nota.setMateria(materia);
+    nota.setValor(request.valor());
+    nota.setData(request.data());
+
+    notaRepository.save(nota);
+
+    return new NotaResponse(
+      nota.getId(),
+      nota.getAluno().getNome(),
+      nota.getProfessor().getNome(),
+      nota.getMateria().getNome(),
+      nota.getValor(),
+      nota.getData());
   }
 
   @Override
@@ -149,25 +155,9 @@ public class NotaServiceImpl implements NotaService {
     NotaEntity nota = notaRepository.findById(id)
       .orElseThrow(() -> new NotFoundException("Nota não encontrada"));
 
-    if (request.alunoId() != null && !nota.getAluno().getId().equals(request.alunoId())) {
-      AlunoEntity aluno = alunoRepository.findById(request.alunoId())
-        .orElseThrow(() -> new NotFoundException("Aluno não encontrado."));
-
-      nota.setAluno(aluno);
-    }
-
-    if (request.professorId() != null && !nota.getProfessor().getId().equals(request.professorId())) {
-      DocenteEntity professor = docenteRepository.findById(request.professorId())
-        .orElseThrow(() -> new NotFoundException("Professor não encontrado."));
-
-      nota.setProfessor(professor);
-    }
-
-    if (request.materiaId() != null && !nota.getMateria().getId().equals(request.materiaId())) {
-      MateriaEntity materia = materiaRepository.findById(request.materiaId())
-        .orElseThrow(() -> new NotFoundException("Curso não encontrado."));
-
-      nota.setMateria(materia);
+    if ( request.alunoId() != null || request.professorId() != null || request.materiaId() != null) {
+      throw new RequisicaoInvalidaException("Somente 'valor' e 'data' da nota podem ser alterados. " +
+        "Se quiser alterar outros dados, exclua a nota e cadastre novamente.");
     }
 
     if (request.valor() != null && !nota.getValor().equals(request.valor())) {
