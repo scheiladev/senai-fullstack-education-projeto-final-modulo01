@@ -21,7 +21,6 @@ public class NotaController {
 
   private final NotaService notaService;
 
-
   @GetMapping("alunos/{id}/notas")
   public ResponseEntity<List<NotaResponse>> buscarNotasPorAluno(
       @PathVariable Long id,
@@ -94,4 +93,5 @@ public class NotaController {
 
     return ResponseEntity.noContent().build();
   }
+
 }
