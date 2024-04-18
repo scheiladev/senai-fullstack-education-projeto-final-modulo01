@@ -3,17 +3,12 @@ package br.com.senai.fullstack.educationprojetofinalmodulo01.service.impl;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.controller.dto.request.AlterarAlunoRequest;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.controller.dto.request.CadastrarAlunoRequest;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.controller.dto.response.AlunoResponse;
-import br.com.senai.fullstack.educationprojetofinalmodulo01.datasource.entity.AlunoEntity;
-import br.com.senai.fullstack.educationprojetofinalmodulo01.datasource.entity.TurmaEntity;
-import br.com.senai.fullstack.educationprojetofinalmodulo01.datasource.entity.UsuarioEntity;
-import br.com.senai.fullstack.educationprojetofinalmodulo01.datasource.repository.AlunoRepository;
-import br.com.senai.fullstack.educationprojetofinalmodulo01.datasource.repository.TurmaRepository;
-import br.com.senai.fullstack.educationprojetofinalmodulo01.datasource.repository.UsuarioRepository;
+import br.com.senai.fullstack.educationprojetofinalmodulo01.controller.dto.response.PontuacaoResponse;
+import br.com.senai.fullstack.educationprojetofinalmodulo01.datasource.entity.*;
+import br.com.senai.fullstack.educationprojetofinalmodulo01.datasource.repository.*;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.infra.exception.customException.*;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.service.AlunoService;
 import br.com.senai.fullstack.educationprojetofinalmodulo01.service.TokenService;
-import br.com.senai.fullstack.educationprojetofinalmodulo01.service.TurmaService;
-import br.com.senai.fullstack.educationprojetofinalmodulo01.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -28,6 +23,8 @@ public class AlunoServiceImpl implements AlunoService {
   private final AlunoRepository alunoRepository;
   private final UsuarioRepository usuarioRepository;
   private final TurmaRepository turmaRepository;
+  private final MateriaRepository materiaRepository;
+  private final NotaRepository notaRepository;
   private final TokenService tokenService;
 
   @Override
@@ -71,6 +68,32 @@ public class AlunoServiceImpl implements AlunoService {
       aluno.getDataNascimento(),
       aluno.getTurma().getId(),
       aluno.getUsuario().getLogin());
+  }
+
+  @Override
+  public PontuacaoResponse buscarPontuacao(Long id, String token) {
+
+    String papel =  tokenService.buscarCampo(token, "scope");
+    if (!papel.equals("ADM") && !papel.equals("ALUNO")) {
+      throw new AcessoNaoAutorizadoException("Acesso não autorizado.");
+    }
+
+    List<NotaEntity> notas = notaRepository.findAllNotasByAlunoId(id);
+    double soma = 0.0;
+    double pontuacao = 0.0;
+    double materias = materiaRepository.findAllMateriasByCursoByAlunoId(id).size();
+
+    for (NotaEntity nota : notas) {
+      soma += nota.getValor();
+    }
+
+    pontuacao = (soma / materias) * 10;
+
+    if (Double.isNaN(pontuacao)) {
+      throw new NotFoundException("Não existem notas para este aluno.");
+    }
+
+    return new PontuacaoResponse(pontuacao);
   }
 
   @Override
@@ -142,21 +165,23 @@ public class AlunoServiceImpl implements AlunoService {
       aluno.setNome(request.nome());
     }
 
-    if (request.dataNascimento() != null && !aluno.getDataNascimento().isEqual(request.dataNascimento())) {
+    if (request.dataNascimento() != null && !aluno.getDataNascimento().equals(request.dataNascimento())) {
       aluno.setDataNascimento(request.dataNascimento());
     }
 
     if (request.turmaId() != null && !aluno.getTurma().getId().equals(request.turmaId())) {
-      aluno.setDataNascimento(request.dataNascimento());
+      TurmaEntity turma = turmaRepository.findById(request.turmaId())
+        .orElseThrow(() -> new NotFoundException("Turma não encontrada."));
+
+      aluno.setTurma(turma);
+    }
+
+    if (request.usuario() != null) {
+      throw new RequisicaoInvalidaException("Usuário não pode ser alterado.");
     }
 
     aluno.setId(id);
-
-    try {
-      alunoRepository.save(aluno);
-    } catch (DataIntegrityViolationException e) {
-      throw new UsuarioInvalidoException("Usuário já está sendo utilizado.");
-    }
+    alunoRepository.save(aluno);
 
     return new AlunoResponse(
       aluno.getId(),

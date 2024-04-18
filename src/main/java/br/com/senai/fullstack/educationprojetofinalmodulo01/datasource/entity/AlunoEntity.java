@@ -1,5 +1,6 @@
 package br.com.senai.fullstack.educationprojetofinalmodulo01.datasource.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -20,6 +21,7 @@ public class AlunoEntity implements Serializable {
   private String nome;
 
   @Column(nullable = false)
+  @JsonFormat(pattern = "dd/MM/yyyy")
   private LocalDate dataNascimento;
 
   @OneToOne(optional = false, cascade = CascadeType.REMOVE)
@@ -29,4 +31,8 @@ public class AlunoEntity implements Serializable {
   @ManyToOne(optional = false)
   @JoinColumn(name = "id_turma", nullable = false)
   private TurmaEntity turma;
+
+  @OneToMany(mappedBy = "aluno")
+  private List<NotaEntity> notas;
+
 }

@@ -8,4 +8,5 @@ public interface TokenService {
   LoginResponse gerarToken(LoginRequest loginRequest);
 
   String buscarCampo(String token, String claim);
+
 }

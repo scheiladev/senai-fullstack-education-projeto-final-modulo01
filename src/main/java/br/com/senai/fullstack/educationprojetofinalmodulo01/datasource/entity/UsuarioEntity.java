@@ -32,4 +32,5 @@ public class UsuarioEntity implements Serializable {
       this.senha
     );
   }
+
 }
