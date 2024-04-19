@@ -26,14 +26,9 @@ public class CursoController {
       @RequestHeader(name = "Authorization") String token) {
 
     List<CursoResponse> listaCursos = cursoService.buscarTodos(token.substring(7));
-
-    if (listaCursos.isEmpty()) {
-      log.info("GET /cursos -> 404 Não há cursos cadastrados");
-    } else {
-      log.info("GET /cursos -> 200 OK");
-      log.info("GET /cursos -> Foram encontrados {} registros", listaCursos.size());
-      log.debug("GET /cursos -> Response Body:\n{}", JsonUtil.objetoParaJson(listaCursos.toString()));
-    }
+    log.info("GET /cursos -> 200 OK");
+    log.info("GET /cursos -> Foram encontrados {} registros", listaCursos.size());
+    log.debug("GET /cursos -> Response Body:\n{}", JsonUtil.objetoParaJson(listaCursos.toString()));
 
     return ResponseEntity.status(HttpStatus.OK).body(listaCursos);
   }
@@ -44,13 +39,8 @@ public class CursoController {
       @RequestHeader(name = "Authorization") String token) {
 
     CursoResponse cursoResponse = cursoService.buscarPorId(id, token.substring(7));
-
-    if (cursoResponse == null) {
-      log.info("GET /cursos -> 404 Curso não encontrado");
-    } else {
-      log.info("GET /cursos -> 200 OK");
-      log.debug("GET /cursos -> Response Body:\n{}", JsonUtil.objetoParaJson(cursoResponse.toString()));
-    }
+    log.info("GET /cursos/{} -> 200 OK", id);
+    log.debug("GET /cursos/{} -> Response Body:\n{}", id, JsonUtil.objetoParaJson(cursoResponse.toString()));
 
     return ResponseEntity.status(HttpStatus.OK).body(cursoResponse);
   }

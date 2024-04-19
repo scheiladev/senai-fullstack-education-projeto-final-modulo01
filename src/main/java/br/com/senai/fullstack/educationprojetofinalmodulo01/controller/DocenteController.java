@@ -27,14 +27,9 @@ public class DocenteController {
       @RequestHeader(name = "Authorization") String token) {
 
     List<DocenteResponse> listaDocentes = docenteService.buscarTodos(token.substring(7));
-
-    if (listaDocentes.isEmpty()) {
-      log.info("GET /docentes -> 404 Não há docentes cadastrados");
-    } else {
-      log.info("GET /docentes -> 200 OK");
-      log.info("GET /docentes -> Foram encontrados {} registros", listaDocentes.size());
-      log.debug("GET /docentes -> Response Body:\n{}", JsonUtil.objetoParaJson(listaDocentes.toString()));
-    }
+    log.info("GET /docentes -> 200 OK");
+    log.info("GET /docentes -> Foram encontrados {} registros", listaDocentes.size());
+    log.debug("GET /docentes -> Response Body:\n{}", JsonUtil.objetoParaJson(listaDocentes.toString()));
 
     return ResponseEntity.status(HttpStatus.OK).body(listaDocentes);
   }
@@ -45,13 +40,8 @@ public class DocenteController {
       @RequestHeader(name = "Authorization") String token) {
 
     DocenteResponse docenteResponse = docenteService.buscarPorId(id, token.substring(7));
-
-    if (docenteResponse == null) {
-      log.info("GET /docentes -> 404 Docente não encontrado");
-    } else {
-      log.info("GET /docentes -> 200 OK");
-      log.debug("GET /docentes -> Response Body:\n{}", JsonUtil.objetoParaJson(docenteResponse.toString()));
-    }
+    log.info("GET /docentes/{} -> 200 OK", id);
+    log.debug("GET /docentes/{} -> Response Body:\n{}", id, JsonUtil.objetoParaJson(docenteResponse.toString()));
 
     return ResponseEntity.status(HttpStatus.OK).body(docenteResponse);
   }

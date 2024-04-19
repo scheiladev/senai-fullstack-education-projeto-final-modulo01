@@ -27,14 +27,9 @@ public class NotaController {
       @RequestHeader(name = "Authorization") String token) {
 
     List<NotaResponse> listaNotas = notaService.buscarNotasPorAluno(id, token.substring(7));
-
-    if (listaNotas.isEmpty()) {
-      log.info("GET /notas -> 404 Não há notas cadastradas");
-    } else {
-      log.info("GET /notas -> 200 OK");
-      log.info("GET /notas -> Foram encontrados {} registros", listaNotas.size());
-      log.debug("GET /notas -> Response Body:\n{}", JsonUtil.objetoParaJson(listaNotas.toString()));
-    }
+    log.info("GET /alunos/{}/notas -> 200 OK", id);
+    log.info("GET /alunos/{}/notas -> Foram encontrados {} registros", id, listaNotas.size());
+    log.debug("GET /alunos/{}/notas -> Response Body:\n{}", id, JsonUtil.objetoParaJson(listaNotas.toString()));
 
     return ResponseEntity.status(HttpStatus.OK).body(listaNotas);
   }
@@ -45,13 +40,8 @@ public class NotaController {
       @RequestHeader(name = "Authorization") String token) {
 
     NotaResponse notaResponse = notaService.buscarPorId(id, token.substring(7));
-
-    if (notaResponse == null) {
-      log.info("GET /notas -> 404 Nota não encontrada");
-    } else {
-      log.info("GET /notas -> 200 OK");
-      log.debug("GET /notas -> Response Body:\n{}", JsonUtil.objetoParaJson(notaResponse.toString()));
-    }
+    log.info("GET /notas/{} -> 200 OK", id);
+    log.debug("GET /notas/{} -> Response Body:\n{}", id, JsonUtil.objetoParaJson(notaResponse.toString()));
 
     return ResponseEntity.status(HttpStatus.OK).body(notaResponse);
   }
