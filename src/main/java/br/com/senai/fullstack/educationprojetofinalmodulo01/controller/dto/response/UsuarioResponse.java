@@ -2,3 +2,4 @@ package br.com.senai.fullstack.educationprojetofinalmodulo01.controller.dto.resp
 
 public record UsuarioResponse(Long id, String login, String papel) {
 }
+

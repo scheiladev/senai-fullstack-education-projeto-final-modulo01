@@ -34,3 +34,4 @@ public class NotaEntity implements Serializable {
   private LocalDate data;
 
 }
+

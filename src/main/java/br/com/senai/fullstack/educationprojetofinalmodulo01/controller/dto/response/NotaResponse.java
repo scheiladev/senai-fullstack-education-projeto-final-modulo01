@@ -4,3 +4,4 @@ import java.time.LocalDate;
 
 public record NotaResponse(Long id, String alunoNome, String professorNome, String materiaNome, Double valor, LocalDate data) {
 }
+

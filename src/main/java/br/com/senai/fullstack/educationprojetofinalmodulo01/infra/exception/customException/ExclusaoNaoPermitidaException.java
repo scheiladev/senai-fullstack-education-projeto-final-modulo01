@@ -10,3 +10,4 @@ public class ExclusaoNaoPermitidaException extends RuntimeException {
   }
 
 }
+

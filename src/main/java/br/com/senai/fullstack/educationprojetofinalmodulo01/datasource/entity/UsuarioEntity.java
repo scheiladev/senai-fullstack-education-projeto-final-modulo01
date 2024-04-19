@@ -34,3 +34,4 @@ public class UsuarioEntity implements Serializable {
   }
 
 }
+

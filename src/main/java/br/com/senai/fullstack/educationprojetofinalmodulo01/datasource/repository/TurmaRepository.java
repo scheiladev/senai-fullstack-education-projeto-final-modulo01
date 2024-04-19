@@ -20,3 +20,4 @@ public interface TurmaRepository extends JpaRepository<TurmaEntity, Long> {
   List<TurmaEntity> findAllCursoIdAndNomeTurma(@Param("cursoId") Long cursoId, @Param("nomeTurma") String nomeTurma);
 
 }
+

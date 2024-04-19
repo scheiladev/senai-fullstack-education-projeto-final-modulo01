@@ -36,3 +36,4 @@ public class AlunoEntity implements Serializable {
   private List<NotaEntity> notas;
 
 }
+

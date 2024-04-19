@@ -4,3 +4,4 @@ import java.time.LocalDate;
 
 public record CadastrarDocenteRequest(String nome, LocalDate dataEntrada, String usuario) {
 }
+

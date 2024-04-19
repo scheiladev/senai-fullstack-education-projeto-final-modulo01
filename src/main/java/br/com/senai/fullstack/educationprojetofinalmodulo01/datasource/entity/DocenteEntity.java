@@ -28,3 +28,4 @@ public class DocenteEntity implements Serializable {
   private UsuarioEntity usuario;
 
 }
+

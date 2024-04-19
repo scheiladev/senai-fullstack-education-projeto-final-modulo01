@@ -12,3 +12,4 @@ public interface CursoRepository extends JpaRepository<CursoEntity, Long> {
   Optional<CursoEntity> findByNome(String nome);
 
 }
+

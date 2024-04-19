@@ -29,3 +29,4 @@ public interface DocenteRepository extends JpaRepository<DocenteEntity, Long> {
   DocenteEntity findByIdWithPapelProfessor(@Param("id") Long id);
 
 }
+

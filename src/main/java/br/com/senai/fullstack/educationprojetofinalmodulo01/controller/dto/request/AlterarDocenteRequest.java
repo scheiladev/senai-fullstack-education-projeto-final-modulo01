@@ -4,3 +4,4 @@ import java.time.LocalDate;
 
 public record AlterarDocenteRequest(Long id, String nome, LocalDate dataEntrada, String usuario) {
 }
+

@@ -12,3 +12,4 @@ public interface NotaRepository extends JpaRepository<NotaEntity, Long> {
   List<NotaEntity> findAllNotasByAlunoId(Long id);
 
 }
+

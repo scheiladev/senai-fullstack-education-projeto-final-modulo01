@@ -27,3 +27,4 @@ public interface MateriaRepository extends JpaRepository<MateriaEntity, Long> {
   List<MateriaEntity> findAllMateriasByCursoByAlunoId(@Param("id") Long id);
 
 }
+

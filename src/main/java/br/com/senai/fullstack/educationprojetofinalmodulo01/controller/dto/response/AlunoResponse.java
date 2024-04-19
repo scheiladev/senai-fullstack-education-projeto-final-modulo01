@@ -4,3 +4,4 @@ import java.time.LocalDate;
 
 public record AlunoResponse(Long id, String nome, LocalDate dataNascimento, Long turmaId, String usuario) {
 }
+

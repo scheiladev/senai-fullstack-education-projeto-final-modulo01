@@ -2,3 +2,4 @@ package br.com.senai.fullstack.educationprojetofinalmodulo01.controller.dto.resp
 
 public record TurmaResponse(Long id, String nome, Long professorId, String professorNome, Long cursoId, String cursoNome) {
 }
+

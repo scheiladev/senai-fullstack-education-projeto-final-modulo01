@@ -18,3 +18,4 @@ public class PapelEntity implements Serializable {
   private String nome;
 
 }
+

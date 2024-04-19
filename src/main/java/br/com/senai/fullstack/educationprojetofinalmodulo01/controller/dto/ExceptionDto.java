@@ -9,3 +9,4 @@ public class ExceptionDto {
   private String codigo;
   private String mensagem;
 }
+

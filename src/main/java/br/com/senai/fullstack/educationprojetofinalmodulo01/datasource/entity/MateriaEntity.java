@@ -22,3 +22,4 @@ public class MateriaEntity implements Serializable {
   private CursoEntity curso;
 
 }
+

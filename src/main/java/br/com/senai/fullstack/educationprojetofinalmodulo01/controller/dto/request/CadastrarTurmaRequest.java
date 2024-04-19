@@ -2,3 +2,4 @@ package br.com.senai.fullstack.educationprojetofinalmodulo01.controller.dto.requ
 
 public record CadastrarTurmaRequest(String nome, Long professorId, Long cursoId) {
 }
+

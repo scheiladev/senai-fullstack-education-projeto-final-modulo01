@@ -8,3 +8,4 @@ public interface UsuarioService {
   UsuarioResponse cadastrarUsuario(CadastrarUsuarioRequest cadastrarUsuarioRequest, String token);
 
 }
+
