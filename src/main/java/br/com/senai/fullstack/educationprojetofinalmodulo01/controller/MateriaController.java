@@ -27,14 +27,9 @@ public class MateriaController {
       @RequestHeader(name = "Authorization") String token) {
 
     List<MateriaResponse> listaMaterias = materiaService.buscarMateriasPorCurso(id, token.substring(7));
-
-    if (listaMaterias.isEmpty()) {
-      log.info("GET /materias -> 404 Não há matérias cadastradas");
-    } else {
-      log.info("GET /materias -> 200 OK");
-      log.info("GET /materias -> Foram encontrados {} registros", listaMaterias.size());
-      log.debug("GET /materias -> Response Body:\n{}", JsonUtil.objetoParaJson(listaMaterias.toString()));
-    }
+    log.info("GET /cursos/{}/materias -> 200 OK", id);
+    log.info("GET /cursos/{}/materias -> Foram encontrados {} registros", id, listaMaterias.size());
+    log.debug("GET /cursos/{}/materias -> Response Body:\n{}", id, JsonUtil.objetoParaJson(listaMaterias.toString()));
 
     return ResponseEntity.status(HttpStatus.OK).body(listaMaterias);
   }
@@ -45,13 +40,8 @@ public class MateriaController {
       @RequestHeader(name = "Authorization") String token) {
 
     MateriaResponse materiaResponse = materiaService.buscarPorId(id, token.substring(7));
-
-    if (materiaResponse == null) {
-      log.info("GET /materias -> 404 Matéria não encontrada");
-    } else {
-      log.info("GET /materias -> 200 OK");
-      log.debug("GET /materias -> Response Body:\n{}", JsonUtil.objetoParaJson(materiaResponse.toString()));
-    }
+    log.info("GET /materias/{} -> 200 OK", id);
+    log.debug("GET /materias/{} -> Response Body:\n{}", id, JsonUtil.objetoParaJson(materiaResponse.toString()));
 
     return ResponseEntity.status(HttpStatus.OK).body(materiaResponse);
   }

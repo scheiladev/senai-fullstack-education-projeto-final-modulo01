@@ -27,14 +27,9 @@ public class TurmaController {
       @RequestHeader(name = "Authorization") String token) {
 
     List<TurmaResponse> listaTurmas = turmaService.buscarTodos(token.substring(7));
-
-    if (listaTurmas.isEmpty()) {
-      log.info("GET /turmas -> 404 Não há turmas cadastradas");
-    } else {
-      log.info("GET /turmas -> 200 OK");
-      log.info("GET /turmas -> Foram encontrados {} registros", listaTurmas.size());
-      log.debug("GET /turmas -> Response Body:\n{}", JsonUtil.objetoParaJson(listaTurmas.toString()));
-    }
+    log.info("GET /turmas -> 200 OK");
+    log.info("GET /turmas -> Foram encontrados {} registros", listaTurmas.size());
+    log.debug("GET /turmas -> Response Body:\n{}", JsonUtil.objetoParaJson(listaTurmas.toString()));
 
     return ResponseEntity.status(HttpStatus.OK).body(listaTurmas);
   }
@@ -45,13 +40,8 @@ public class TurmaController {
       @RequestHeader(name = "Authorization") String token) {
 
     TurmaResponse turmaResponse = turmaService.buscarPorId(id, token.substring(7));
-
-    if (turmaResponse == null) {
-      log.info("GET /turmas -> 404 Turma não encontrada");
-    } else {
-      log.info("GET /turmas -> 200 OK");
-      log.debug("GET /turmas -> Response Body:\n{}", JsonUtil.objetoParaJson(turmaResponse.toString()));
-    }
+    log.info("GET /turmas/{} -> 200 OK", id);
+    log.debug("GET /turmas/{} -> Response Body:\n{}", id, JsonUtil.objetoParaJson(turmaResponse.toString()));
 
     return ResponseEntity.status(HttpStatus.OK).body(turmaResponse);
   }

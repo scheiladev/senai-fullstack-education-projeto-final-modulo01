@@ -28,14 +28,9 @@ public class AlunoController {
       @RequestHeader(name = "Authorization") String token) {
 
     List<AlunoResponse> listaAlunos = alunoService.buscarTodos(token.substring(7));
-
-    if (listaAlunos.isEmpty()) {
-      log.info("GET /alunos -> 404 Não há alunos cadastrados");
-    } else {
-      log.info("GET /alunos -> 200 OK");
-      log.info("GET /alunos -> Foram encontrados {} registros", listaAlunos.size());
-      log.debug("GET /alunos -> Response Body:\n{}", JsonUtil.objetoParaJson(listaAlunos.toString()));
-    }
+    log.info("GET /alunos -> 200 OK");
+    log.info("GET /alunos -> Foram encontrados {} registros", listaAlunos.size());
+    log.debug("GET /alunos -> Response Body:\n{}", JsonUtil.objetoParaJson(listaAlunos.toString()));
 
     return ResponseEntity.status(HttpStatus.OK).body(listaAlunos);
   }
@@ -46,13 +41,8 @@ public class AlunoController {
       @RequestHeader(name = "Authorization") String token) {
 
     AlunoResponse alunoResponse = alunoService.buscarPorId(id, token.substring(7));
-
-    if (alunoResponse == null) {
-      log.info("GET /alunos -> 404 Aluno não encontrado");
-    } else {
-      log.info("GET /alunos -> 200 OK");
-      log.debug("GET /alunos -> Response Body:\n{}", JsonUtil.objetoParaJson(alunoResponse.toString()));
-    }
+    log.info("GET /alunos/{} -> 200 OK", id);
+    log.debug("GET /alunos/{} -> Response Body:\n{}", id, JsonUtil.objetoParaJson(alunoResponse.toString()));
 
     return ResponseEntity.status(HttpStatus.OK).body(alunoResponse);
   }
@@ -63,13 +53,8 @@ public class AlunoController {
     @RequestHeader(name = "Authorization") String token) {
 
     PontuacaoResponse pontuacaoResponse = alunoService.buscarPontuacao(id, token.substring(7));
-
-    if (pontuacaoResponse == null) {
-      log.info("GET /alunos -> 404 Aluno não encontrado");
-    } else {
-      log.info("GET /alunos -> 200 OK");
-      log.debug("GET /alunos -> Response Body:\n{}", JsonUtil.objetoParaJson(pontuacaoResponse.toString()));
-    }
+    log.info("GET /alunos/{}/pontuacao -> 200 OK", id);
+    log.debug("GET /alunos/{}/pontuacao -> Response Body:\n{}", id, JsonUtil.objetoParaJson(pontuacaoResponse.toString()));
 
     return ResponseEntity.status(HttpStatus.OK).body(pontuacaoResponse);
   }

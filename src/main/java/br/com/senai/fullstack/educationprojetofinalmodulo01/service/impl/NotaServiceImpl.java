@@ -118,12 +118,27 @@ public class NotaServiceImpl implements NotaService {
       throw new CodigoInvalidoException("Código não é de um Aluno.");
     }
 
-    if (!notaRepository.existsByAlunoAndProfessorAndMateria(request.alunoId(), request.professorId(), request.materiaId())) {
-      throw new CodigoInvalidoException("Os dados informados são incompatíveis. " +
-        "Verifique as informações: " +
-        "O aluno não está matriculado nesta matéria, ou " +
-        "O professor não leciona esta matéria; ou " +
-        "A matéria não faz parte deste curso.");
+    boolean alunoMateria = aluno.getTurma().getCurso().getId() == materia.getCurso().getId();
+
+    boolean professorMateria = false;
+
+    for (TurmaEntity turma : materia.getCurso().getTurmas()) {
+      if (turma.getProfessor().getId() == professor.getId()) {
+        professorMateria = true;
+        break;
+      }
+    }
+
+    if (!alunoMateria && !professorMateria) {
+      throw new CodigoInvalidoException("Professor e Aluno não estão ligados a Matéria");
+    }
+
+    if (!alunoMateria ) {
+      throw new CodigoInvalidoException("Aluno não está matriculado nesta matéria");
+    }
+
+    if (!professorMateria) {
+      throw new CodigoInvalidoException("Professor não dá aulas para este aluno");
     }
 
     NotaEntity nota = new NotaEntity();
