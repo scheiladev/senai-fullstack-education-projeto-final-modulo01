@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static java.lang.Double.NaN;
-
 @Slf4j
 @RequiredArgsConstructor
 @RestController

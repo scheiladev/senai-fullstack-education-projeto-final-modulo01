@@ -2,7 +2,6 @@ package br.com.senai.fullstack.educationprojetofinalmodulo01.datasource.reposito
 
 import br.com.senai.fullstack.educationprojetofinalmodulo01.datasource.entity.NotaEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
