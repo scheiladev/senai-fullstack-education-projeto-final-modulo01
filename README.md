@@ -416,3 +416,13 @@ recebem um Token JWT que controla o acesso aos dados do mesmo.
 - [Documentação do Projeto](FullStack%20%5BEducation%5D%20-%20Módulo%201%20-%20Projeto%20Avaliativo.pdf)
 - [Postman Collection](projeto-final-modulo01.postman_collection.json)
 - [Quadro de Atividades do Trello](https://trello.com/invite/b/TefrZJX8/ATTI0fc5843efb20eb779cffb040ad4817aa31A17E23/projeto-final-modulo-01)
+
+  ## Observações:
+  Sobre a entrega da versão final do trabalho, gostaria de ressaltar que durante o processo de merge das branches develop->feature->main (para respeitar o modelo GitFlow), eu enfrentei alguns conflitos que, apesar dos meus esforços, não consegui resolver.
+  Em um dado momento na linha do tempo, eu criei uma pull request de uma das features direto na main, e somente depois de aceitar o PR, percebi que havia cometido um engano. Reverti o PR e segui no desenvolvimento, sem me dar conta do problema que criei.
+  Muitos conflitos foram gerados e apesar de gastar algumas horas tentando resolver, o comportamento da aplicação, que até então estava perfeito, começou a apresentar vários retornos inesperados.
+  Diante dessa situação, tomei a decisão de redefinir a branch principal do repositório, a main. Para isso, apaguei a main existente e criei uma nova versão a partir da branch develop, onde as alterações foram integradas de forma harmoniosa.
+  Entendo que isso fere a proposta do trabalho, porém acredito que essa abordagem era a mais adequada para garantir a integridade do código.
+  
+
+  
